@@ -1,1 +1,1 @@
-# simulation-study-example
+# Example Code Simulation Study
