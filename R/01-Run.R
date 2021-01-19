@@ -1,5 +1,5 @@
-### With this script, we see how to run a simulation study
-### Details on the study are included in the README file of this repository
+### With this script, we see how to setup and run a simulation study.
+### Details on the study are included in the README file of this repository.
 
 ### 1- Start small, as a proof-of-concept
 
