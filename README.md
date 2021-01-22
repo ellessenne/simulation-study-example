@@ -43,7 +43,7 @@ confounder_triangle() %>%
   theme_dag_blank(base_size = 12)
 ```
 
-<img src="README_files/figure-gfm/dag-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/dag-1.png" width="50%" style="display: block; margin: auto;" />
 
 where X is the exposure, Y the outcome, and Z a confounder.
 

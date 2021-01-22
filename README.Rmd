@@ -8,11 +8,11 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "75%",
+  out.width = "50%",
   fig.width = 5,
-  fig.height = 5,
+  fig.height = 3,
   fig.align = "center",
-  dpi = 300
+  dpi = 200
 )
 ```
 
@@ -65,13 +65,11 @@ This is what we are trying to learn from this simulation study.
 X is a binary treatment variable, Z is a continuous confounder, and Y is a continuous outcome.
 
 Z is simulated from a standard normal distribution, while X depends on Z according to a logistic model:
-
 ```tex
 \log \frac{P(X = 1)}{P(X = 0)} = \gamma_0 + \gamma_1 Z
 ```
 
 Y depends on Z according to a linear model:
-
 ```tex
 Y = \alpha_0 + \alpha_1 Z + \varepsilon
 ```
