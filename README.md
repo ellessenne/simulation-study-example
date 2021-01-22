@@ -30,12 +30,20 @@ The aim of this simulation study is pedagogical.
 Say we have a study which can be summarised by the following DAG:
 
 ``` r
+library(ggdag)
+#> Loading required package: ggplot2
+#> 
+#> Attaching package: 'ggdag'
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
+
 confounder_triangle() %>%
   ggdag() +
   theme_dag_blank(base_size = 12)
 ```
 
-<img src="README_files/figure-gfm/dag-1.png" width="75%" />
+<img src="README_files/figure-gfm/dag-1.png" width="75%" style="display: block; margin: auto;" />
 
 where X is the exposure, Y the outcome, and Z a confounder.
 

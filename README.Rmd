@@ -5,14 +5,13 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
-library(ggdag)
-
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   out.width = "75%",
   fig.width = 5,
-  fig.height = 3,
+  fig.height = 5,
+  fig.align = "center",
   dpi = 300
 )
 ```
@@ -40,6 +39,8 @@ The aim of this simulation study is pedagogical.
 Say we have a study which can be summarised by the following DAG:
 
 ```{r dag}
+library(ggdag)
+
 confounder_triangle() %>%
   ggdag() +
   theme_dag_blank(base_size = 12)
