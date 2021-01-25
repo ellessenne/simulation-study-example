@@ -54,14 +54,10 @@ program define simstudy, rclass
 	quietly set obs `nobs'
 	gen Z = rnormal()
 	* Simulating an exposure
-	local gamma0 = 1
-	local gamma1 = 3
 	gen PX = 1 / (1 + exp(-(`gamma0' + `gamma1' * Z)))
 	gen X = rbinomial(1, PX)
 	drop PX
 	* Simulating an outcome
-	local alpha0 = 10
-	local alpha1 = 5
 	gen Y = rnormal(`alpha0' + `alpha1' * Z)
 	* Then, run the analysis methods
 	* Model 1:
@@ -79,7 +75,7 @@ simstudy
 return list
 
 * Seems ok, hence we now create a postfile to store the results for each iteration...
-postfile res int(rep_id) float(alpha1) byte(method) float(theta se) using data/res.dta, replace
+postfile res int(i) float(dgm) byte(model) float(estimate se) using data/res.dta, replace
 
 * We set a seed for reproducibility
 * You could also store the random seed at each generation, you
@@ -97,8 +93,8 @@ forval i = 1/`B' {
 		else if (`dgm' == 2) {
 			simstudy, nobs(`N') alpha1(0)
 		}
-		post res (`i') (`alpha1') (1) (r(Xbeta_est_m1)) (r(Xbeta_se_m1))
-		post res (`i') (`alpha1') (2) (r(Xbeta_est_m2)) (r(Xbeta_se_m2))
+		post res (`i') (`dgm') (1) (r(Xbeta_est_m1)) (r(Xbeta_se_m1))
+		post res (`i') (`dgm') (2) (r(Xbeta_est_m2)) (r(Xbeta_se_m2))
 	}
     noi _dots `i' 0
 }
@@ -107,19 +103,19 @@ postclose res
 * Ok, done!
 * We now label the estimates data and re-save
 use data/res.dta, clear
-label variable rep_id "Rep num"
-label variable alpha1 "DGM"
-label variable method "Method"
-label variable theta "θᵢ"
+label variable i "Rep num"
+label variable dgm "DGM"
+label variable model "Model"
+label variable estimate "θᵢ"
 label variable se "SE(θᵢ)"
-label define alpha1lab 5 "DGM=1" 0 "DGM=2"
-label values alpha1 alpha1lab
-label define methodlab 1 "Model=1" 2 "Model=2"
-label values method methodlab
-sort rep_id alpha1 method
+label define dgmlab 1 "DGM=1" 2 "DGM=2"
+label values dgm dgmlab
+label define modellab 1 "Model=1" 2 "Model=2"
+label values model modellab
+sort i dgm model
 
 * Let's check the labelled estimates
-list in 1/20, noobs sepby(rep_id)
+list in 1/20, noobs sepby(i)
 
 * Then, compress and export
 compress
