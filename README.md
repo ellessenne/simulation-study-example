@@ -106,16 +106,17 @@ that quantifies the association between X and Y.
 We estimate the regression coefficient of interest using linear
 regression. Specifically, we fit the following two models:
 
-1.  A model that adjusts for the observed confounder Z (model 1):
-
-``` tex
-Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon
-```
-
-1.  A model that does not (model 2):
+1.  A model that fails to adjust for the observed confounder Z (model
+    1):
 
 ``` tex
 Y = \beta_0 + \beta_1 X + \varepsilon
+```
+
+1.  A model that properly adjusts for Z (model 2):
+
+``` tex
+Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon
 ```
 
 The coefficient of interest is *β*<sub>1</sub> according to this
