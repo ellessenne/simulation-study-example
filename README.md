@@ -67,15 +67,28 @@ X is a binary treatment variable, Z is a continuous confounder, and Y is
 a continuous outcome.
 
 Z is simulated from a standard normal distribution, while X depends on Z
-according to a logistic model: $$
+according to a logistic model:
+
+$$
 \log \frac{P(X = 1)}{P(X = 0)} = \gamma_0 + \gamma_1 Z
 $$
 
-Y depends on Z according to a linear model: $$
-Y = \alpha_0 + \alpha_1 Z + \varepsilon
-$$ with $\varepsilon$ following a standard normal distribution.
+Y depends on Z according to a linear model:
 
-We fix the parameters $\gamma_0 = 1$, $\gamma_1 = 3$, $\alpha_0 = 10$.
+$$
+Y = \alpha_0 + \alpha_1 Z + \varepsilon
+$$
+
+with $\varepsilon$ following a standard normal distribution.
+
+We fix the following parameters:
+
+-   $\gamma_0 = 1$,
+
+-   $\gamma_1 = 3$,
+
+-   $\alpha_0 = 10$.
+
 For $\alpha_1$, we actually simulate two scenarios:
 
 1.  $\alpha_1 = 5$: in this scenario, Z is actually a confounder;
@@ -100,19 +113,25 @@ We estimate the regression coefficient of interest using linear
 regression. Specifically, we fit the following two models:
 
 1.  A model that fails to adjust for the observed confounder Z (model
-    1): $$
-    Y = \beta_0 + \beta_1 X + \varepsilon
-    $$
+    1):
 
-2.  A model that properly adjusts for Z (model 2): $$
-    Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon
-    $$
+$$
+Y = \beta_0 + \beta_1 X + \varepsilon
+$$
+
+1.  A model that properly adjusts for Z (model 2):
+
+$$
+Y = \beta_0 + \beta_1 X + \beta_2 Z + \varepsilon
+$$
 
 The coefficient of interest is $\beta_1$ according to this notation.
 
 ## Performance measures
 
-The key performance measure of interest is bias, defined as $$
+The key performance measure of interest is bias, defined as
+
+$$
 E(\hat{\beta_1})
 $$ as we know that — according to our DGMs — the true $\beta_1 = 0$.
 
