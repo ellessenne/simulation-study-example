@@ -8,11 +8,11 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "50%",
+  out.width = "60%",
   fig.width = 5,
   fig.height = 3,
   fig.align = "center",
-  dpi = 200
+  dpi = 300
 )
 ```
 
