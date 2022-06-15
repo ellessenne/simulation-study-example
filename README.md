@@ -133,11 +133,14 @@ The key performance measure of interest is bias, defined as
 
 $$
 E(\hat{\beta_1})
-$$ as we know that — according to our DGMs — the true $\beta_1 = 0$.
+$$
+
+as we know that — according to our DGMs — the true $\beta_1 = 0$.
 
 We might also be interested in estimating the power of a significance
-test for $\hat{\beta_1}$ at the $\alpha = 0.05$ level. In our example,
-think of that as a test for the null hypothesis $\beta_1 = 0$.
+test for $\hat{\beta_1}$ at a given significance level, e.g. 0.05. In
+our example, think of that as a test for the null hypothesis
+$\beta_1 = 0$.
 
 # License
 
