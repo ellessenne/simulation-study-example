@@ -37,7 +37,7 @@ autoplot(summary(study), type = "heat", stats = "bias")
 # And this can be obtained with any summary statistic of interest
 # Plots are also standard gg* objects, so they can be further customised at will:
 autoplot(study, type = "est_ridge") +
-  theme_bw(base_family = "JetBrains Mono") +
+  theme_bw(base_family = "Courier New") +
   viridis::scale_colour_viridis(discrete = TRUE) +
   viridis::scale_fill_viridis(discrete = TRUE) +
   labs(x = "Point estimate", color = "", fill = "", title = "Here's a customised plot!")
@@ -55,7 +55,7 @@ kable(study, stats = c("bias", "power"))
 
 ### 5- Lots of customisation can be achieved by extracting data from the `study`
 ###    object and creating tables/plots by hand:
-study_results <- get_data(study, stats = c("bias", "power"))
+study_results <- tidy(study, stats = c("bias", "power"))
 # E.g. a better table:
 library(tidyverse)
 library(glue)
