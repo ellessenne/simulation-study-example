@@ -11,17 +11,16 @@ down below.
 
 This repository is organised as follows:
 
--   R code is included in the folder named `R`, with three scripts: one
-    for coding the simulation study, one for analysing the results, and
-    one for creating plots and tables with the results;
+- R code is included in the folder named `R`, with three scripts: one
+  for coding the simulation study, one for analysing the results, and
+  one for creating plots and tables with the results;
 
--   Stata code is included in the folder named `Stata`, including three
-    analogous scripts.
+- Stata code is included in the folder named `Stata`, including three
+  analogous scripts.
 
--   Simulated data with the results obtained by the above-mentioned code
-    in R and Stata are included in the folder named `data`. The R
-    dataset has extension `*.RDS`, while the Stata dataset has extension
-    `*.DTA`.
+- Simulated data with the results obtained by the above-mentioned code
+  in R and Stata are included in the folder named `data`. The R dataset
+  has extension `*.RDS`, while the Stata dataset has extension `*.DTA`.
 
 ## Aims of the simulation study
 
@@ -31,18 +30,15 @@ Say we have a study which can be summarised by the following DAG:
 
 ``` r
 library(ggdag)
-#> 
-#> Attaching package: 'ggdag'
-#> The following object is masked from 'package:stats':
-#> 
-#>     filter
+library(ggplot2)
 
 confounder_triangle() %>%
   ggdag() +
-  theme_dag_blank(base_size = 12)
+  theme_dag_blank(base_size = 12) +
+  coord_cartesian(xlim = c(-0.5, 2.5), ylim = c(-0.5, 1.5))
 ```
 
-<img src="README_files/figure-gfm/dag-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="README_files/figure-gfm/dag-1.png" width="70%" style="display: block; margin: auto;" />
 
 where X is the exposure, Y the outcome, and Z a confounder.
 
@@ -83,11 +79,11 @@ with $\varepsilon$ following a standard normal distribution.
 
 We fix the following parameters:
 
--   $\gamma_0 = 1$,
+- $\gamma_0 = 1$,
 
--   $\gamma_1 = 3$,
+- $\gamma_1 = 3$,
 
--   $\alpha_0 = 10$.
+- $\alpha_0 = 10$.
 
 For $\alpha_1$, we actually simulate two scenarios:
 

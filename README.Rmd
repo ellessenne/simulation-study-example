@@ -1,18 +1,23 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "60%",
+  out.width = "70%",
   fig.width = 5,
   fig.height = 3,
   fig.align = "center",
-  dpi = 300
+  dpi = 600,
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
@@ -40,10 +45,12 @@ Say we have a study which can be summarised by the following DAG:
 
 ```{r dag}
 library(ggdag)
+library(ggplot2)
 
 confounder_triangle() %>%
   ggdag() +
-  theme_dag_blank(base_size = 12)
+  theme_dag_blank(base_size = 12) +
+  coord_cartesian(xlim = c(-0.5, 2.5), ylim = c(-0.5, 1.5))
 ```
 
 where X is the exposure, Y the outcome, and Z a confounder.
