@@ -12,6 +12,9 @@ Z <- rnorm(n = N)
 .gamma1 <- 3
 LP <- .gamma0 + .gamma1 * Z
 P_X <- boot::inv.logit(LP) # Check that it is equivalent to: 1 / (1 + exp(-LP))
+# This requires the {boot} package, which should come by default with your R installation
+# Can also be calculated by hand:
+P_X - 1 / (1 + exp(-LP)) # <- Should all be zeros, because it's equivalent
 X <- rbinom(n = N, size = 1, prob = P_X)
 
 # Simulating an outcome
