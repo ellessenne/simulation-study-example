@@ -1,6 +1,11 @@
 ### With this script, we see how to setup and run a simulation study.
 ### Details on the study are included in the README file of this repository.
 
+### 0- Packages
+library(tidyverse)
+library(boot)
+library(broom)
+
 ### 1- Start small, as a proof-of-concept
 
 # Simulating a confounder
@@ -57,7 +62,15 @@ make_data <- function(N, i, dgm, .gamma0, .gamma1, .alpha0, .alpha1) {
 }
 
 # Remember to test the function:
-dt <- make_data(N = 100, i = 1, dgm = 1, .gamma0 = 1, .gamma1 = 3, .alpha0 = 10, .alpha1 = 5)
+dt <- make_data(
+  N = 100,
+  i = 1,
+  dgm = 1,
+  .gamma0 = 1,
+  .gamma1 = 3,
+  .alpha0 = 10,
+  .alpha1 = 5
+)
 head(dt)
 
 # Second, we create a function that fits a 'method'
@@ -108,7 +121,16 @@ B <- 3
 # as it can easily be generalised to run in parallel via {furrr}.
 # Step #1 is to simulate B datasets, e.g. with N = 100 subjects each:
 library(purrr)
-list_of_dt <- purrr::map(.x = seq(B), .f = make_data, N = 100, dgm = 1, .gamma0 = 1, .gamma1 = 3, .alpha0 = 10, .alpha1 = 5)
+list_of_dt <- purrr::map(
+  .x = seq(B),
+  .f = make_data,
+  N = 100,
+  dgm = 1,
+  .gamma0 = 1,
+  .gamma1 = 3,
+  .alpha0 = 10,
+  .alpha1 = 5
+)
 # Check that we simulated data correctly:
 purrr::map(.x = list_of_dt, .f = head)
 # Looks fine!
@@ -137,14 +159,44 @@ res
 set.seed(43875683)
 # Here we need two separate function calls, one per each DGM
 B <- 10000
-data_dgm1 <- purrr::map(.x = seq(B), .f = make_data, N = 200, dgm = 1, .gamma0 = 1, .gamma1 = 3, .alpha0 = 10, .alpha1 = 5)
-data_dgm2 <- purrr::map(.x = seq(B), .f = make_data, N = 200, dgm = 2, .gamma0 = 1, .gamma1 = 3, .alpha0 = 10, .alpha1 = 0)
+data_dgm1 <- purrr::map(
+  .x = seq(B),
+  .f = make_data,
+  N = 200,
+  dgm = 1,
+  .gamma0 = 1,
+  .gamma1 = 3,
+  .alpha0 = 10,
+  .alpha1 = 5,
+  .progress = TRUE
+)
+data_dgm2 <- purrr::map(
+  .x = seq(B),
+  .f = make_data,
+  N = 200,
+  dgm = 2,
+  .gamma0 = 1,
+  .gamma1 = 3,
+  .alpha0 = 10,
+  .alpha1 = 0,
+  .progress = TRUE
+)
 # And let's combine the lists into a single one for simplicity
 list_of_dt <- c(data_dgm1, data_dgm2)
 
 # Then, we fit both analysis methods to each simulated dataset:
-res_m1 <- purrr::map_dfr(.x = list_of_dt, .f = make_analysis, model = 1)
-res_m2 <- purrr::map_dfr(.x = list_of_dt, .f = make_analysis, model = 2)
+res_m1 <- purrr::map_dfr(
+  .x = list_of_dt,
+  .f = make_analysis,
+  model = 1,
+  .progress = TRUE
+)
+res_m2 <- purrr::map_dfr(
+  .x = list_of_dt,
+  .f = make_analysis,
+  model = 2,
+  .progress = TRUE
+)
 res <- rbind(res_m1, res_m2)
 
 ### 5- We go get a cup of coffee while it run, and then we're done!
@@ -152,31 +204,11 @@ res <- rbind(res_m1, res_m2)
 # Actually, before saving our results, we can simplify our life (future us will thank us)
 # by creating factors for our DGMs and methods:
 res[["dgm"]] <- factor(res[["dgm"]], levels = 1:2, labels = c("DGM=1", "DGM=2"))
-res[["model"]] <- factor(res[["model"]], levels = 1:2, labels = c("Model=1", "Model=2"))
+res[["model"]] <- factor(
+  res[["model"]],
+  levels = 1:2,
+  labels = c("Model=1", "Model=2")
+)
 
 # Then, we save the results in RDS format
 saveRDS(object = res, file = "data/res.RDS")
-
-### 6- BONUS
-###    With long running jobs, we might want to implement a progress bar to
-###    keep track of progress.
-
-# Here we create a wrapper around the make_analysis() function to do just that:
-make_analysis_progress <- function(i, .progress.bar, ...) {
-  out <- make_analysis(data = list_of_dt[[i]], ...)
-  setTxtProgressBar(pb = .progress.bar, value = i)
-  return(out)
-}
-
-# Lets simulate B = 200 data sets for a given DGM to test that:
-B <- 200
-test_data <- purrr::map(.x = seq(B), .f = make_data, N = 200, dgm = 1, .gamma0 = 1, .gamma1 = 3, .alpha0 = 10, .alpha1 = 5)
-# Same as before, nothing new here
-
-# Then, we create a progress bar to pass to our new function:
-pb <- txtProgressBar(min = 0, max = B, style = 3) # The best style
-
-# Finally, we run the analysis with the new function:
-test_res <- purrr::map_dfr(.x = seq_along(test_data), .f = make_analysis_progress, model = 1, .progress.bar = pb)
-# Same for the other method, omitted here but it's trivial to generalise.
-# Compare carefully this call to purrr::map_dfr vs the previous call!

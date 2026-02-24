@@ -2,6 +2,11 @@
 ### using the script '01-Code.R'.
 ### Details on the study are included in the README file of this repository.
 
+### 0- Packages
+library(tidyverse)
+library(ggplot2)
+library(rsimsum)
+
 ### 1- We start by importing the dataset with the results of our study:
 dt <- readRDS(file = "data/res.RDS")
 
@@ -25,7 +30,10 @@ head(dt)
 
 ### 3- We could then plot some variables, e.g. for a given method or DGM:
 # With a histogram:
-hist(subset(dt, dgm == "DGM=1" & model == "Model=1")$estimate, main = "DGM=1 & Model=1")
+hist(
+  subset(dt, dgm == "DGM=1" & model == "Model=1")$estimate,
+  main = "DGM=1 & Model=1"
+)
 # With a scatterplot e.g. to compare methods for a given DGM
 plot(
   x = subset(dt, dgm == "DGM=1" & model == "Model=1")$estimate,
@@ -38,7 +46,6 @@ plot(
 # - Check the potential correlation between methods
 # - Get a 'grasp' of our data
 # ...and of course, we could do the same using ggplot2 (or lattice)
-library(ggplot2)
 ggplot(dt, aes(x = estimate, y = std.error)) +
   geom_point() +
   facet_grid(dgm ~ model)
@@ -51,8 +58,7 @@ ggplot(dt, aes(x = estimate)) +
 ###    e.g. using group_by from {dplyr} (but {data.table}'s verbs work too, or
 ###    even base R). I am just using this for illustration purposes, you can use
 ###    whatever tool you know best!
-library(tidyverse)
-group_by(dt, dgm, model) %>%
+group_by(dt, dgm, model) |>
   summarise(
     mean_estimate = mean(estimate),
     sd_estimate = sd(estimate),
@@ -61,14 +67,13 @@ group_by(dt, dgm, model) %>%
   )
 # Here we can see mean and SDs of point estimates and standard errors
 # We can also e.g. calculate bias:
-group_by(dt, dgm, model) %>%
+group_by(dt, dgm, model) |>
   summarise(
     bias = mean(estimate - 0)
   ) # 0 is the true value here!
 
 ### 5- All of the above (and much more) can be automated and
 ###    streamlined by using the {rsimsum} package
-library(rsimsum)
 # First, we need to define our simulation study:
 study <- simsum(
   data = dt,

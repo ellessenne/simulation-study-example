@@ -2,11 +2,18 @@
 ### run (and exported) using the script '01-Code.R' and analysed with '02-Analyse.R'.
 ### Details on the study are included in the README file of this repository.
 
+### 0- Packages
+library(tidyverse)
+library(ggplot2)
+library(rsimsum)
+library(tidyverse)
+library(glue)
+library(kableExtra)
+
 ### 1- We start by importing the dataset with the results of our study:
 dt <- readRDS(file = "data/res.RDS")
 
 ### 2- Then, we summarise the study once again using {rsimsum}:
-library(rsimsum)
 study <- simsum(
   data = dt,
   estvarname = "estimate",
@@ -20,7 +27,6 @@ study
 
 ### 3- Now, we can obtain a variety of plots too using the autoplot() function
 # Plots for the point estimates:
-library(ggplot2)
 autoplot(study, type = "est")
 autoplot(study, type = "est_ba")
 autoplot(study, type = "est_ridge")
@@ -40,7 +46,12 @@ autoplot(study, type = "est_ridge") +
   theme_bw(base_family = "Courier New") +
   viridis::scale_colour_viridis(discrete = TRUE) +
   viridis::scale_fill_viridis(discrete = TRUE) +
-  labs(x = "Point estimate", color = "", fill = "", title = "Here's a customised plot!")
+  labs(
+    x = "Point estimate",
+    color = "",
+    fill = "",
+    title = "Here's a customised plot!"
+  )
 # {rsimsum} can do a lot more, if you're interested check the
 # webpage of the package: https://ellessenne.github.io/rsimsum/
 
@@ -57,15 +68,14 @@ kable(study, stats = c("bias", "power"))
 ###    object and creating tables/plots by hand:
 study_results <- tidy(study, stats = c("bias", "power"))
 # E.g. a better table:
-library(tidyverse)
-library(glue)
-library(kableExtra)
-study_results %>%
-  mutate(y = glue("{formattable::comma(est, 4)} ({formattable::comma(mcse, 4)})")) %>%
-  select(stat, model, dgm, y) %>%
-  pivot_wider(names_from = "model", values_from = "y") %>%
-  mutate(stat = tools::toTitleCase(stat)) %>%
-  arrange(stat, dgm) %>%
+study_results |>
+  mutate(
+    y = glue("{formattable::comma(est, 4)} ({formattable::comma(mcse, 4)})")
+  ) |>
+  select(stat, model, dgm, y) |>
+  pivot_wider(names_from = "model", values_from = "y") |>
+  mutate(stat = tools::toTitleCase(stat)) |>
+  arrange(stat, dgm) |>
   kable(
     format = "markdown",
     col.names = c("Performance measure", "DGM", "Model = 1", "Model = 2"),
